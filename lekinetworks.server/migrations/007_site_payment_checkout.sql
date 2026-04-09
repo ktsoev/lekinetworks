@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS site_checkout_pending (
+  invoice_id VARCHAR(64) NOT NULL PRIMARY KEY,
+  provider VARCHAR(32) NOT NULL,
+  site_user_id BIGINT UNSIGNED NOT NULL,
+  plan_key VARCHAR(32) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_site_user (site_user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS site_payment_idempotency (
+  external_id VARCHAR(128) NOT NULL PRIMARY KEY,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

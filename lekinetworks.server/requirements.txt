@@ -1,0 +1,9 @@
+remnawave
+fastapi
+uvicorn
+python-dotenv
+aiomysql
+pyjwt
+aiosmtplib
+yookassa
+httpx

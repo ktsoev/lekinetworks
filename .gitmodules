@@ -1,0 +1,3 @@
+[submodule "lekinetworks.react"]
+	path = lekinetworks.react
+	url = https://github.com/ktsoev/lekinetworks.react.git

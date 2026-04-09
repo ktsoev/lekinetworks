@@ -1,0 +1,4 @@
+httpx
+aiogram
+python-decouple
+python-dotenv
