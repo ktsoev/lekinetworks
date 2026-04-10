@@ -1,0 +1,14 @@
+[Unit]
+Description=LEKI Networks — API Proxy (Security Gateway)
+After=network.target lekinetworks-server.service
+
+[Service]
+Type=simple
+User=leki
+WorkingDirectory=/opt/lekinetworks/lekinetwork.proxy
+ExecStart=/opt/lekinetworks/lekinetwork.proxy/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

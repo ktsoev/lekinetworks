@@ -1,0 +1,15 @@
+[Unit]
+Description=LEKI Networks — Backend API Server
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=leki
+WorkingDirectory=/opt/lekinetworks/lekinetworks.server
+ExecStart=/opt/lekinetworks/lekinetworks.server/.venv/bin/python start.py
+Restart=always
+RestartSec=5
+Environment=LOG_DIR=/var/log/lekinetworks/server/
+
+[Install]
+WantedBy=multi-user.target

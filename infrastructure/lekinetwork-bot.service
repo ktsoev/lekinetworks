@@ -1,0 +1,15 @@
+[Unit]
+Description=LEKI Networks — Telegram Bot
+After=network.target lekinetworks-server.service
+
+[Service]
+Type=simple
+User=leki
+WorkingDirectory=/opt/lekinetworks/lekinetwork.bot
+ExecStart=/opt/lekinetworks/lekinetwork.bot/.venv/bin/python start.py
+Restart=always
+RestartSec=5
+Environment=LOG_DIR=/var/log/lekinetworks/bot/
+
+[Install]
+WantedBy=multi-user.target
