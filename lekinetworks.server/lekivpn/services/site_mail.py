@@ -41,46 +41,94 @@ async def send_login_code(to_email: str, code: str) -> None:
 
     html_body = f"""
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
-    <div style="background: linear-gradient(135deg, #38B2AC 0%, #2C7A7B 100%); color: white; padding: 40px 30px; border-radius: 16px 16px 0 0; text-align: center;">
-        <h1 style="margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.5px;">LEKI Networks</h1>
-        <p style="margin: 12px 0 0 0; font-size: 18px; opacity: 0.95;">Код входа</p>
-    </div>
+<body style="margin: 0; padding: 0; background-color: #0a0a0a; font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #0a0a0a; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px;">
 
-    <div style="background: #ffffff; padding: 40px 30px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-        <p style="font-size: 16px; margin-top: 0; color: #374151;">Здравствуйте!</p>
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding-bottom: 2px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(90deg, #00e5ff 0%, #00ccee 100%); height: 2px; font-size: 0; line-height: 0;">
+                                <tr><td>&nbsp;</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #111111; padding: 32px 32px 24px 32px; border-left: 1px solid rgba(0, 229, 255, 0.12); border-right: 1px solid rgba(0, 229, 255, 0.12);">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0; font-size: 20px; font-weight: 700; color: #00e5ff; letter-spacing: 3px; text-transform: uppercase;">LEKI NETWORKS</p>
+                                        <p style="margin: 6px 0 0 0; font-size: 12px; font-weight: 500; color: #9494A0; text-transform: uppercase; letter-spacing: 2px;">Код входа</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-        <p style="font-size: 16px; color: #374151;">Введите этот код на странице входа, чтобы продолжить в личном кабинете LEKI Networks.</p>
+                    <!-- Body -->
+                    <tr>
+                        <td style="background-color: #111111; padding: 0 32px 32px 32px; border-left: 1px solid rgba(0, 229, 255, 0.12); border-right: 1px solid rgba(0, 229, 255, 0.12);">
 
-        <div style="background: #E0F7F4 !important; padding: 24px; border-radius: 12px; margin: 30px 0; border-left: 4px solid #38B2AC; color-scheme: light only; text-align: center;">
-            <p style="margin: 0 0 12px 0; font-size: 14px; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.06em;">Ваш код</p>
-            <p style="margin: 0; font-size: 36px; font-weight: 700; letter-spacing: 0.35em; color: #0f766e !important; font-family: 'Courier New', ui-monospace, monospace;">{code_safe}</p>
-        </div>
+                            <p style="margin: 0 0 16px 0; font-size: 15px; color: #EEEEF0; line-height: 1.6;">Здравствуйте!</p>
+                            <p style="margin: 0 0 28px 0; font-size: 15px; color: #9494A0; line-height: 1.7;">Введите этот код на странице входа, чтобы продолжить в личном кабинете.</p>
 
-        <p style="font-size: 15px; color: #6b7280; margin: 0 0 24px 0;">
-            Код действует <strong style="color: #374151;">{ttl} мин.</strong> Не передавайте его другим. Если вы не запрашивали вход, просто закройте это письмо.
-        </p>
+                            <!-- OTP Block -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #0d0d0d; border: 1px solid rgba(0, 229, 255, 0.25); margin-bottom: 28px;">
+                                <tr>
+                                    <td style="padding: 28px 24px; text-align: center;">
+                                        <p style="margin: 0 0 14px 0; font-size: 11px; font-weight: 600; color: #9494A0; text-transform: uppercase; letter-spacing: 3px;">Ваш код</p>
+                                        <p style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: 0.3em; color: #00e5ff; font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);">{code_safe}</p>
+                                    </td>
+                                </tr>
+                            </table>
 
-        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #f3f4f6;">
-            <p style="font-size: 14px; color: #6b7280; margin: 0 0 20px 0;">
-                Если у вас возникли вопросы, свяжитесь с нашей службой поддержки.
-            </p>
-            <p style="font-size: 15px; color: #374151; margin: 0;">
-                С уважением,<br>
-                <strong style="color: #38B2AC;">Команда LEKI Networks</strong>
-            </p>
-        </div>
-    </div>
+                            <p style="margin: 0 0 28px 0; font-size: 14px; color: #5E5E6E; line-height: 1.7;">
+                                Код действует <span style="color: #EEEEF0; font-weight: 600;">{ttl} мин.</span>&nbsp; Не передавайте его третьим лицам. Если вы не запрашивали вход — просто проигнорируйте это письмо.
+                            </p>
 
-    <div style="text-align: center; margin-top: 30px; padding: 20px;">
-        <p style="font-size: 13px; color: #9ca3af; margin: 0;">
-            © {year} LEKI Networks. Ваш безопасный и свободный интернет.
-        </p>
-    </div>
+                            <!-- Divider -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                                <tr>
+                                    <td style="border-top: 1px solid rgba(0, 229, 255, 0.08); font-size: 0; line-height: 0;">&nbsp;</td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 0 0 4px 0; font-size: 14px; color: #5E5E6E;">
+                                Если возникли вопросы, свяжитесь с поддержкой.
+                            </p>
+                            <p style="margin: 0; font-size: 14px; color: #9494A0;">
+                                С уважением, <span style="color: #00e5ff; font-weight: 600;">Команда LEKI Networks</span>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Bottom border -->
+                    <tr>
+                        <td style="border-left: 1px solid rgba(0, 229, 255, 0.12); border-right: 1px solid rgba(0, 229, 255, 0.12); border-bottom: 1px solid rgba(0, 229, 255, 0.12); background-color: #111111; height: 1px; font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 24px 0; text-align: center;">
+                            <p style="margin: 0; font-size: 12px; color: #5E5E6E; letter-spacing: 0.5px;">
+                                &copy; {year} LEKI Networks — ваш безопасный и свободный интернет.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
 """
@@ -98,6 +146,7 @@ async def send_login_code(to_email: str, code: str) -> None:
         port=port,
         username=user,
         password=password,
-        start_tls=True,
+        use_tls=True,
+        start_tls=False,
         timeout=timeout,
     )
