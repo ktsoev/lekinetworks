@@ -106,19 +106,25 @@ async def site_verify_code(
 ):
     email = user_site_database.normalize_email(body.email)
     code = body.code.strip().replace(" ", "")
+    logger.info("verify-code attempt: email=%s code_len=%d", email, len(code))
     if not user_site_database.is_valid_email(email):
+        logger.warning("verify-code: invalid email format email=%s", email)
         raise HTTPException(status_code=400, detail="Invalid email")
     if not code:
+        logger.warning("verify-code: empty code for email=%s", email)
         raise HTTPException(status_code=400, detail="Invalid code")
 
     if not await site_email_otp.verify_otp(email, code):
+        logger.warning("verify-code: rejected for email=%s", email)
         raise HTTPException(status_code=400, detail="Invalid or expired code")
 
     site_user_id = await user_site_database.get_or_create_user_by_email(email)
     if not site_user_id:
+        logger.error("verify-code: failed to get/create user for email=%s", email)
         raise HTTPException(status_code=500, detail="Failed to create user")
 
     token = site_jwt.create_access_token(site_user_id)
+    logger.info("verify-code: login success email=%s site_user_id=%s", email, site_user_id)
     return models_site.SiteTokenResponse(access_token=token)
 
 

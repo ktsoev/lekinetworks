@@ -22,6 +22,7 @@ def _hash_code(email: str, code: str) -> str:
 
 async def save_otp(email: str, code: str, ttl_minutes: int) -> bool:
     if not db.pool:
+        logger.error("save_otp: DB pool not available, email=%s", email)
         return False
     code_hash = _hash_code(email, code)
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=ttl_minutes)
@@ -35,14 +36,16 @@ async def save_otp(email: str, code: str, ttl_minutes: int) -> bool:
                         VALUES (%s, %s, %s, 0)""",
                     (email, code_hash, expires_naive),
                 )
+        logger.info("save_otp: saved for email=%s expires_at=%s", email, expires_naive)
         return True
     except Exception as e:
-        logger.exception("save_otp: %s", e)
+        logger.exception("save_otp: failed for email=%s: %s", email, e)
         return False
 
 
 async def verify_otp(email: str, code: str) -> bool:
     if not db.pool:
+        logger.error("verify_otp: DB pool not available, email=%s", email)
         return False
     try:
         async with db.pool.acquire() as conn:
@@ -54,6 +57,7 @@ async def verify_otp(email: str, code: str) -> bool:
                 )
                 row = await cursor.fetchone()
                 if not row:
+                    logger.warning("verify_otp: no OTP record found for email=%s", email)
                     return False
                 if isinstance(row, dict):
                     stored_hash = row["code_hash"]
@@ -63,6 +67,7 @@ async def verify_otp(email: str, code: str) -> bool:
                     stored_hash, expires_at, attempts = row[0], row[1], int(row[2] or 0)
 
                 if attempts >= _MAX_ATTEMPTS:
+                    logger.warning("verify_otp: max attempts (%d) reached for email=%s", _MAX_ATTEMPTS, email)
                     return False
 
                 now = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -71,6 +76,7 @@ async def verify_otp(email: str, code: str) -> bool:
                 else:
                     exp_cmp = expires_at
                 if not exp_cmp or now > exp_cmp:
+                    logger.warning("verify_otp: OTP expired for email=%s (expired_at=%s, now=%s)", email, exp_cmp, now)
                     await cursor.execute(
                         f"DELETE FROM {config.SITE_EMAIL_OTP_TABLE} WHERE email = %s",
                         (email,),
@@ -79,6 +85,7 @@ async def verify_otp(email: str, code: str) -> bool:
 
                 expect = _hash_code(email, code)
                 if not secrets.compare_digest(str(stored_hash), expect):
+                    logger.warning("verify_otp: wrong code for email=%s (attempt %d/%d)", email, attempts + 1, _MAX_ATTEMPTS)
                     await cursor.execute(
                         f"""UPDATE {config.SITE_EMAIL_OTP_TABLE}
                             SET attempts = attempts + 1 WHERE email = %s""",
@@ -90,7 +97,8 @@ async def verify_otp(email: str, code: str) -> bool:
                     f"DELETE FROM {config.SITE_EMAIL_OTP_TABLE} WHERE email = %s",
                     (email,),
                 )
+                logger.info("verify_otp: success for email=%s", email)
                 return True
     except Exception as e:
-        logger.exception("verify_otp: %s", e)
+        logger.exception("verify_otp: unexpected error for email=%s: %s", email, e)
         return False
